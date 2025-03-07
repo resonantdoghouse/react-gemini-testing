@@ -9,7 +9,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await axios.post(`http://localhost:5050/prompt`, {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/prompt`, {
       message,
     });
 
