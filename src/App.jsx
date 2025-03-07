@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Button, Container, TextField, Typography } from "@mui/material";
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [message, setMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    console.log(message);
+    const response = await axios.post(`http://localhost:5050/prompt`, {
+      message,
+    });
+
+    console.log(response.data.response);
+
+    setResponseMessage(response.data.response);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
+      <Typography variant="h4" gutterBottom>
+        Welcome to Vite + Material UI
+      </Typography>
+
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Your Prompt"
+          variant="outlined"
+          multiline
+          rows={4} // Makes it a textarea
+          fullWidth
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Submit
+        </Button>
+      </form>
+
+      <Typography
+        variant="body1"
+        align="left"
+        sx={{ textAlign: "left", marginTop: 2, marginBottom: 2 }}
+      >
+        {responseMessage}
+      </Typography>
+    </Container>
+  );
 }
 
-export default App
+export default App;
