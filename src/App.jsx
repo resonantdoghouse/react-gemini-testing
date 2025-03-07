@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { marked } from "marked";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import axios from "axios";
 
 function App() {
@@ -8,21 +9,17 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    console.log(message);
     const response = await axios.post(`http://localhost:5050/prompt`, {
       message,
     });
 
-    console.log(response.data.response);
-
-    setResponseMessage(response.data.response);
+    setResponseMessage(marked(response.data.response));
   };
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 5 }}>
       <Typography variant="h4" gutterBottom>
-        Welcome to Vite + Material UI
+        React Gemini Chat
       </Typography>
 
       <form onSubmit={handleSubmit}>
@@ -41,14 +38,23 @@ function App() {
           Submit
         </Button>
       </form>
-
-      <Typography
-        variant="body1"
-        align="left"
-        sx={{ textAlign: "left", marginTop: 2, marginBottom: 2 }}
-      >
-        {responseMessage}
-      </Typography>
+      <Box sx={{ padding: 2 }}>
+        <Box
+          sx={{
+            mt: 2,
+            p: 2,
+            border: "1px solid #ddd",
+            borderRadius: 1,
+            backgroundColor: "#f9f9f9",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            textAlign: "left",
+            // maxHeight: "300px",
+            overflowY: "auto",
+          }}
+          dangerouslySetInnerHTML={{ __html: responseMessage }}
+        />
+      </Box>
     </Container>
   );
 }
